@@ -13,7 +13,7 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
 
  test "should get about page(URL[About]ページのテスト。GETリクエストをaboutアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[200-299]を返すはず)" do
    get static_pages_about_url
-   assert_respnse :success
+   assert_response :success
  end
 
 end
