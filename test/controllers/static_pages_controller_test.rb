@@ -6,12 +6,12 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get help(URL[Help]ページのテスト。GETリクエストをhomeアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[成功]を返すはず)" do
+  test "should get help(URL[Help]ページのテスト。GETリクエストをhelpアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[成功]を返すはず)" do
     get static_pages_help_url
     assert_response :success
   end
 
- test "should get about page(URL[About]ページのテスト。GETリクエストをhomeアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[200-299]を返すはず)" do
+ test "should get about page(URL[About]ページのテスト。GETリクエストをaboutアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[200-299]を返すはず)" do
    get static_pages_about_url
    assert_respnse :success
  end
