@@ -5,8 +5,9 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
   def setup
     @base_title = "Ruby on Rails Tutorial Sample App"
   end
-  test "should get home(URL[Home]のテスト。GETリクエストをhomeアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[成功]を返す。タイトルはRuby on Rails Tutorial Sample App)" do
-    get static_pages_home_url
+
+  test "should get root(rootルーティング(home)のテスト。レスポンスはリクエストに対して[成功]を返す。タイトルはRuby on Rails Tutorial Sample App)" do
+    get root_url
     assert_response :success
     assert_select 'title', "Home | #{@base_title}"
   end
