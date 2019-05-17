@@ -1,12 +1,12 @@
 require 'test_helper'
 
 class StaticPagesControllerTest < ActionDispatch::IntegrationTest
-  test "should get home" do
+  test "should get home(URL[Home]のテスト。GETリクエストをhomeアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[成功]を返すはず)" do
     get static_pages_home_url
     assert_response :success
   end
 
-  test "should get help" do
+  test "should get help(URL[Help]ページのテスト。GETリクエストをhomeアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[成功]を返すはず)" do
     get static_pages_help_url
     assert_response :success
   end
