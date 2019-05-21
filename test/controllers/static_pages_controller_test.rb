@@ -24,4 +24,10 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
    assert_select 'title', "About | #{@base_title}"
  end
 
+ # test "should get contact(URL[Contact]ページのテスト。GETリクエストをcontactアクションに対して発行 (=送信) 。レスポンスはリクエストに対して[200-299]を返す。タイトルはRuby on Rails Tutorial Sample App)" do
+ #   get static_pages_contact_url
+ #   assert_response :success
+ #   assert_select "title", "Contact | #{@base_title}"
+ # end
+
 end
