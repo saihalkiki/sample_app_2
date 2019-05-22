@@ -9,4 +9,9 @@ class UserTest < ActiveSupport::TestCase
     assert @user.valid?, "バリデーションに引っかかってfalseを返してます"
   end
 
+ test "name should be present(名前が空白で入力できてしまいます)" do
+   @user.name = "  "
+   assert_not @user.valid?, "バリデーションに引っかかってfalseを返してます"
+ end
+
 end
