@@ -14,4 +14,9 @@ class UserTest < ActiveSupport::TestCase
    assert_not @user.valid?, "バリデーションに引っかかってfalseを返してます"
  end
 
+ test "email should be present(メールが空白で入力できてしまいます)" do
+   @user.email = "  "
+   assert_not @user.valid?, "バリデーションに引っかかってfalseを返してます"
+ end
+
 end
