@@ -13,4 +13,6 @@ class User < ApplicationRecord
             # validates(uniqueness: ture) → 一意性の検証オプション
             # case_sensitive: → true:大文字小文字を区別する false:大文字小文字を区別しない
 
+  has_secure_password
+
 end
