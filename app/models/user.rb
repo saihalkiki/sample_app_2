@@ -16,7 +16,7 @@ class User < ApplicationRecord
   has_secure_password
   # Userモデルにpassword_digest属性を追加し、Gemfileにbcryptを追加したことで、Userモデル内でhas_secure_passwordが使えるようになる
 
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { in: 6..72 }
   # 略前→validates( :password, :presence => true, :length => {:minimum => 6})
 
 end
