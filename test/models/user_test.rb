@@ -2,7 +2,9 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   def setup
-    @user = User.new(name: "Example User", email: "user@example.com")
+    @user = User.new(name: "Example User", email: "user@example.com",
+                    password: "foobar", password_confirmation: "foobar")
+    # has_secure_passwordメソッド追加により、２つのペアの仮想的な属性 (passwordとpassword_confirmation) が使えるようになる。
   end
 
   test "should be vaild" do
@@ -50,6 +52,16 @@ class UserTest < ActiveSupport::TestCase
     @user.email = mixed_case_email
     @user.save
     assert_equal mixed_case_email.downcase, @user.reload.email
+  end
+
+  test "password should be present (password空白に対するテスト)" do
+    @user.password = @user.password_confirmation = " " * 6
+    assert_not @user.valid? ,"空白で保存できてしまいます"
+  end
+
+  test "password should have a minimum length(passwordの長さ6文字以上のテスト)" do
+    @user.password = @user.password_confirmation = "a" * 5
+    assert_not @user.valid? , "5文字で保存できてしまいます"
   end
 
 end

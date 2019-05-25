@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  before_save { self.email = email.downcase }
+  # before_save { self.email = email.downcase }
   # before_save { email.downcase! }
   # いくつかのデータベースのアダプタが、常に大文字小文字を区別するインデックスを使っているとは限らない問題への対処
 
@@ -14,5 +14,6 @@ class User < ApplicationRecord
             # case_sensitive: → true:大文字小文字を区別する false:大文字小文字を区別しない
 
   has_secure_password
+  # Userモデルにpassword_digest属性を追加し、Gemfileにbcryptを追加したことで、Userモデル内でhas_secure_passwordが使えるようになる
 
 end
