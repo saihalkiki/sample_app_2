@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get  '/signup',  to: 'users#new'
 
   resources :users
+
+  # HTTPﾘｸｴｽﾄ  URL        ｱｸｼｮﾝ   名前付きﾙｰﾄ
   # GET	    /users	      index	  users_path
   # すべてのユーザーを一覧するページ
 
@@ -20,7 +22,7 @@ Rails.application.routes.draw do
   # ユーザーを新規作成するページ (ユーザー登録)
 
   # POST	  /users	      create	users_path
-  # ユーザーを作成するアクション
+  # ユーザーを新規作成するアクション
 
   # GET	    /users/1/edit	edit	  edit_user_path(user)
   # id=1のユーザーを編集するページ
