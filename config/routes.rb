@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get  '/about',   to: 'static_pages#about'
   get  '/contact', to: 'static_pages#contact'
   get  '/signup',  to: 'users#new'
-
+  post '/signup',  to: 'users#create' #createアクションの時`signup`を取得 
   resources :users
 
   # HTTPﾘｸｴｽﾄ  URL        ｱｸｼｮﾝ   名前付きﾙｰﾄ
