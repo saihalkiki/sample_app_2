@@ -8,8 +8,11 @@ Rails.application.routes.draw do
   get  '/about',   to: 'static_pages#about'
   get  '/contact', to: 'static_pages#contact'
   get  '/signup',  to: 'users#new'
-  post '/signup',  to: 'users#create' #createアクションの時`signup`を取得 
-  resources :users
+  post '/signup',  to: 'users#create' #createアクションの時`signup`を取得
+  get '/login', to: 'sessions#new'
+  post '/login', to: 'sessions#create'
+  delete '/login', to: 'sessions#destroy'
+  resources :users  #usersリソースをRESTfullな構造にするためのコード。
 
   # HTTPﾘｸｴｽﾄ  URL        ｱｸｼｮﾝ   名前付きﾙｰﾄ
   # GET	    /users	      index	  users_path
