@@ -14,8 +14,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     # newビューにて送ったformをuser_paramsで受け取り、ユーザーオブジェクトを生成、@userに代入。悪意あるユーザー対策Strong Parametersを引数にする
     if @user.save  # 保存の成功をここで扱う。
+      log_in @user # sessions_helperのlog_inメソッドの引数として@user(ユーザーオブジェクト)を渡す。「session[:user_id] = user.id」。
       flash[:success] = "ようこそ！HARUKAのサイトへ！" # flashの:successシンボルに成功時のメッセージを代入
-      redirect_to @user  # redirect_to user_url(@user)の略。もう少し詳しくするとredirect_to user_url(id: @user.id)の略。つまり/users/idへ飛ばす(https://qiita.com/Kawanji01/items/96fff507ed2f75403ecb)を参考
+      redirect_to @user  # redirect_to user_url(@user)の略。redirect_to("/users/#{@user.id}")と等価。/users/idへ飛ばす(https://qiita.com/Kawanji01/items/96fff507ed2f75403ecb)を参考
     else
       render 'users/new'
     end

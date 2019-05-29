@@ -19,9 +19,10 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
         post users_path, params: { user: { name:                  "Example User",
         email: "user@example.com", password: "password", password_confirmation: "password" } } # signup_path(/signup)からusers_path(/users)へparamsハッシュのuserハッシュの値を送れるか検証
       end
-      follow_redirect! # 指定されたリダイレクト先(直後のusers/show)へ飛べるか検証
+      follow_redirect! # 直前（POSTリクエストを送信した）の結果を見て、指定されたリダイレクト先に移動する
       assert_template 'users/show'  # users/showが描画されているか確認
       assert_not flash.empty? # flashが空ならfalse,空じゃなければtrue
+      assert is_logged_in?  # 新規登録時にセッションが空ならfalse、空じゃない（ログインしていれば)true
     end
 
 end

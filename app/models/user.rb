@@ -18,5 +18,12 @@ class User < ApplicationRecord
 
   validates :password, presence: true, length: { in: 6..72 }
   # 略前→validates( :password, :presence => true, :length => {:minimum => 6})
+  # Module ActiveModel::SecurePassword に72bytesを超える長さは無視すると記載があったため、72bytesに制限
+
+  #テストのfixture用に、password_digestの文字列をハッシュ化して、ハッシュ値として返す
+    def User.digest(string)
+      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :  BCrypt::Engine.cost
+      BCrypt::Password.create(string, cost: cost)
+    end
 
 end
