@@ -28,8 +28,9 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", logout_path # リンク logout_path(/logout)が存在すればtrue
     assert_select "a[href=?]", user_path(@user) # リンク user_path(@user)→(/users/@user.id)が存在すればtrue
     delete logout_path #DELETEリクエスト URL(/logout)を送信
-    assert_not is_logged_in? # セッションが空ならtrue、空じゃない（ログインしていれば)false
+    assert_not is_logged_in? # test/test_helper.rbのメソッド。session[:user_id]が空ならtrue、空じゃないならfalse
     assert_redirected_to root_url #rediret先がroot_url('/')になっているか
+    delete logout_path  # #DELETEリクエスト URL(/logout)を送信。2番目のウィンドウでログアウトをクリックするユーザーをシミュレートする
     follow_redirect! # リダイレクト先に移動する
     assert_select "a[href=?]", login_path # リンク login_path('/login')が存在すればtrue
     assert_select "a[href=?]", logout_path,      count: 0 #logout_path('/logout')が存在しなければtrue(count: 0というオプションで一致するリンクが0かどうかを確認している)
