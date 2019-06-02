@@ -16,4 +16,18 @@ class ActiveSupport::TestCase
   end
   # セッションが空ならfalse、空じゃない（ログインしていれば)true
 
+  # テストユーザーとしてログインする
+  def log_in_as(user)
+    session[:user_id] = user_id
+  end
+end
+
+class ActionDispatch::IntegrationTest
+
+  # テストユーザーとしてログインする(統合テストではsessionを直接取り扱うことができないので、代わりにSessionsリソースに対してpostを送信することでログイン動作を行う)
+  def log_in_as(user, password: 'password', remember_me: '1')
+    post login_path, params: { session: { email: user.email,
+                                          password: password,
+                                          remember_me: remember_me } }
+  end
 end

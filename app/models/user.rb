@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_secure_password
   # Userモデルにpassword_digest属性を追加し、Gemfileにbcryptを追加したことで、Userモデル内でhas_secure_passwordが使えるようになる
 
-  validates :password, presence: true, length: { in: 6..72 }
+  validates :password, presence: true, length: { minimum: 6 }
   # 略前→validates( :password, :presence => true, :length => {:minimum => 6})
   # Module ActiveModel::SecurePassword に72bytesを超える長さは無視すると記載があったため、72bytesに制限
 
@@ -25,7 +25,8 @@ class User < ApplicationRecord
   #テストのfixture用に、password_digestの文字列をハッシュ化して、ハッシュ値として返す
     def digest(string)
     # def self.digest(string) → def User.digest(string)
-      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :  BCrypt::Engine.cost
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
       BCrypt::Password.create(string, cost: cost)
     end
 

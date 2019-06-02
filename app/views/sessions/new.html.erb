@@ -6,7 +6,8 @@
 
     <!-- formの送信先を指定 -->
 
-    <%= form_for(:session, url: login_path) do |f| %> <!-- 送信先をurlが/login、フォーム送信後にparams[:sessions]に入るよう指定-->
+    <%= form_for(:session, url: login_path) do |f| %> <!-- 送信先をurlが/login、フォーム送信後にparams[:sessions]に入るよう指定
+    form_for(モデルオブジェクト [, オプション])-->
 
     <!-- form作成-->
 
@@ -16,6 +17,11 @@
       <%= f.label :password %>
       <%= f.password_field :password, class: 'form-control' %>
 
+      <%= f.label :remember_me, class: "checkbox inline" do %>
+        <%= f.check_box :remember_me %>
+          <span>ログインしたままにする</span>
+      <% end %>
+
       <!-- 送信ボタン-->
 
       <%= f.submit "ログイン", class: "btn btn-primary" %>
@@ -23,6 +29,6 @@
 
     <!-- ユーザー登録ページへのリンク -->
 
-    <p>New user? <%= link_to "Sign up now!", signup_path %></p>
+    <p>初めてご利用ですか？ <%= link_to "新規登録はこちら！", signup_path %></p>
   </div>
 </div>

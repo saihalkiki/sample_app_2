@@ -17,6 +17,7 @@ module SessionsHelper
     if (user_id = session[:user_id]) # user_idにsession[:user_id]を代入した結果、user_idが存在すればtrue
       @current_user ||= User.find_by(id: user_id)   # @current_user(現在のログインユーザー)が存在すればそのまま、なければuser_id(session[:user_id])と同じidを持つユーザーをDBから探して@current_userに代入
     elsif (user_id = cookies.signed[:user_id]) # user_idに署名付きcookieを代入した結果、user_idに著名付きcookiesが存在すればtrue
+      # raise  # テストがパスすれば、この部分がテストされていないことがわかる
       user = User.find_by(id: user_id) # user_id(著名な付きcookie)と同じユーザーidをもつユーザーをDBから探し、userに代入
       if user && user.authenticated?(cookies[:remember_token]) # DBのユーザーがいるかつ、受け取ったremember_tokenをハッシュ化した記憶ダイジェストを持つユーザーがいる場合処理を行う
         log_in(user) # session[:user_id]にuserのIDを代入
@@ -31,17 +32,17 @@ module SessionsHelper
   end
 
   #永続的セッションを破棄する
-    def forget(user)
-      user.forget # 引数に対してforgetメソッドを呼び出し、DBにあるremember_digestをnilにする
-      cookies.delete(:user_id)  # cookiesのuser_idを削除
-      cookies.delete(:remember_token) # cookiesのremeber_tokenを削除
-    end
+  def forget(user)
+    user.forget # 引数に対してforgetメソッドを呼び出し、DBにあるremember_digestをnilにする
+    cookies.delete(:user_id)  # cookiesのuser_idを削除
+    cookies.delete(:remember_token) # cookiesのremeber_tokenを削除
+  end
 
-    # ユーザーをログアウトする
-    def log_out
-      forget(current_user)  # forgetメソッドを呼び出し、引数@current_userのDBにあるremember_digestをnilにして、cookies[:user_id]とcookies[:remeber_token]を消去する
-      session.delete(:user_id) # session[:user_id]を削除する
-      @current_user = nil # @current_userをnilする
-    end
-    
+  # ユーザーをログアウトする
+  def log_out
+    forget(current_user)  # forgetメソッドを呼び出し、引数@current_userのDBにあるremember_digestをnilにして、cookies[:user_id]とcookies[:remeber_token]を消去する
+    session.delete(:user_id) # session[:user_id]を削除する
+    @current_user = nil # @current_userをnilする
+  end
+
 end
