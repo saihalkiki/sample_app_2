@@ -42,10 +42,10 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, User.digest(remember_token)) # DBのremember_digest属性にremember_tokenをBcryptでハッシュ化して更新
   end
 
-  # 引数として受け取った値をrememberに代入して暗号化（remember_digest化）し、DBにいるユーザーのremember_digestと比較、同一ならtrueを返す
+  # 引数として受け取った値をrememberに代入して暗号化（remember_digest）し、DBにいるユーザーのremember_digestと比較、同一ならtrue・違えばfelseを返す
   def authenticated?(remember_token)
     return false if remember_digest.nil?  # 記憶ダイジェストがnilの場合、falseを戻り値として返す
-    BCrypt::Password.new(remember_digest).is_password?(remember_token) # DBのremember_digestと、受け取った引数をremember_digestにした値を比較
+    BCrypt::Password.new(remember_digest).is_password?(remember_token) # DBのremember_digestと、受け取った引数をremember_digestにした値を比較し、ture・felseで返す
     # module BCryptで「is_password?」メソッドを定義しており、「==」と同じ意味。参照：https://github.com/codahale/bcrypt-ruby/blob/master/lib/bcrypt/password.rb
   end
 

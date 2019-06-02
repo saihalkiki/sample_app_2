@@ -7,7 +7,7 @@ module SessionsHelper
 
   # ユーザーのセッションを永続的にする
   def remember(user)  # rememberメソッドにuser(ログイン時にユーザーが送ったメールとパスと同一の、DBにいるユーザー)を引数として渡す
-    user.remember  # model/User.classのrememberメソッドを使い、ログイン時のユーザーと同一のDBのユーザーに、remember_tokenを生成してremember_digestにハッシュ化したハッシュ値を持たせて保存
+    user.remember  # model/User.classのrememberメソッドを使い、DBのremember_digest属性にランダムで生成されたremember_tokenをBcryptでハッシュ化して更新
     cookies.permanent.signed[:user_id] = user.id  # ログイン時のユーザーidを、有効期限(20年)と署名付きの暗号化したユーザーidとしてcookiesに保存
     cookies.permanent[:remember_token] = user.remember_token  # ログイン時のremember_tokenを、有効期限（20年）を設定して新たなremember_tokenに保存。Userモデルにて、ログインユーザーと同一ならtrueを返す
   end
@@ -19,7 +19,7 @@ module SessionsHelper
     elsif (user_id = cookies.signed[:user_id]) # user_idに署名付きcookieを代入した結果、user_idに著名付きcookiesが存在すればtrue
       # raise  # テストがパスすれば、この部分がテストされていないことがわかる
       user = User.find_by(id: user_id) # user_id(著名な付きcookie)と同じユーザーidをもつユーザーをDBから探し、userに代入
-      if user && user.authenticated?(cookies[:remember_token]) # DBのユーザーがいるかつ、受け取ったremember_tokenをハッシュ化した記憶ダイジェストを持つユーザーがいる場合処理を行う
+      if user && user.authenticated?(cookies[:remember_token]) # DBのユーザーがいるかつ、引数として受け取った値をrememberに代入して暗号化（remember_digest）し、DBにいるユーザーのremember_digestと比較、同一ならtrue・違えばfelseを返す
         log_in(user) # session[:user_id]にuserのIDを代入
         @current_user = user  # @current_userにuser(User.find_by(id: user_id))を代入
       end

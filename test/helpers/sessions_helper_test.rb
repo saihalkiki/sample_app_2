@@ -15,7 +15,7 @@ class SessionsHelperTest < ActionView::TestCase
       assert is_logged_in? # session[:user_id]が空ならfalse、空じゃない（ログインしていれば)true
     end
 
-    test "current_user returns nil when remember digest is wrong" do
+    test "current_user returns nil when remember digest is wrong" do  #remember_digestが間違っているとcurrent_userはnilを返すテスト
       @user.update_attribute(:remember_digest, User.digest(User.new_token))   # @userのremember_digestが、ハッシュ化したremember_tokenをdigest化した値と同じなら、remember_digestを更新する
       assert_nil current_user # current_userがnilならtrue(@userが更新できない場合、current_userがnilになるかどうか検証)
     end
