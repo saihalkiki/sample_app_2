@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   def new #(GET login_path)
+    # debugger
   end
 
   def create  #(POST login_path)
@@ -14,7 +15,9 @@ class SessionsController < ApplicationController
       # else
       #   forget(user)
       # end
-
+      # logger.info("--------saito costom------------")
+      # logger.info(cookies['remember_token'])
+      # logger.info("--------saito costom------------")
       # redirect_to @user # リスト10.32で消去　redirect_to user_url(user)の略。redirect_to("/users/#{user.id}")と等価。つまり/users/idへ飛ばす。
       redirect_back_or @user
     else

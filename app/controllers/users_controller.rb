@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :update]  # onlyオプション(ハッシュ)で指定したeditとupdateアクションだけに「logged_in_user」メソッドを適用
+  before_action :logged_in_user, only: [:index, :edit, :update]
+  # onlyオプション(ハッシュ)で指定したeditとupdateアクションだけに「logged_in_user」メソッドを適用
   before_action :correct_user,   only: [:edit, :update]  # onlyオプション(ハッシュ)で指定したeditとupdateアクションだけに「correct_user」メソッドを適用
+
+  def index # 全てのユーザーを表示するページ
+    @users = User.all
+  end
 
   def show
     @user = User.find(params[:id])
@@ -39,13 +44,15 @@ class UsersController < ApplicationController
     end
   end
 
-  # Strong Parameters
   private
 
+  # Strong Parameters
     def user_params
       params.require(:user).permit(:name,:email,:password,:password_confirmation)
     end
     # 特定の属性:userオブジェクトの:name,:email,:password,:password_confirmationを許可し、それ以外は受け付けない設定。
+
+    # /beforeアクション/
 
     def logged_in_user
       unless logged_in?  # sessions_helperのメソッド  unlessはifの否定演算子 current_user(ログインユーザー)がnilであれば(false)処理を行う
