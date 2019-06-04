@@ -26,6 +26,11 @@ module SessionsHelper
     end
   end
 
+  # 渡されたユーザーがログイン済みユーザーであればtrueを返す
+  def current_user?(user)
+    user == current_user
+  end
+
   # ユーザーがログインしていればtrue、その他ならfalseを返す
   def logged_in?
     !current_user.nil?  # current_user(ログインユーザー)がnil以外ならtrue、nilなzらfalseを返す。「!」は否定演算子。
@@ -43,6 +48,23 @@ module SessionsHelper
     forget(current_user)  # forgetメソッドを呼び出し、引数@current_userのDBにあるremember_digestをnilにして、cookies[:user_id]とcookies[:remeber_token]を消去する
     session.delete(:user_id) # session[:user_id]を削除する
     @current_user = nil # @current_userをnilする
+  end
+
+# /フレンドリーフォワーディングの実装/
+
+  # 記憶したURL (もしくはデフォルト値) にリダイレクト
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+
+  # アクセスしようとしたURLを覚えておく
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+    # 転送先のURLを保存する仕組みは、ユーザーをログインさせたときと同じで、session変数をを使う
+    # request.original_urlでリクエスト先が取得できる
+    # リクエストが送られたURLをsession変数の:forwarding_urlキーに格納、ただし、GETリクエストが送られたときだけ格納する。こうすることで、例えばログインしていないユーザーがフォームを使って送信した場合、転送先のURLを保存させないようにする→if request.get?という条件文を使って対応
+
   end
 
 end

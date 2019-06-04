@@ -14,7 +14,9 @@ class SessionsController < ApplicationController
       # else
       #   forget(user)
       # end
-      redirect_to @user # redirect_to user_url(user)の略。redirect_to("/users/#{user.id}")と等価。つまり/users/idへ飛ばす。
+
+      # redirect_to @user # リスト10.32で消去　redirect_to user_url(user)の略。redirect_to("/users/#{user.id}")と等価。つまり/users/idへ飛ばす。
+      redirect_back_or @user
     else
       flash.now[:danger] = 'メールアドレスかパスワードのどちらかが間違っています。'
       render 'new' # sessions/newビューの出力
