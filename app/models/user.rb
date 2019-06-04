@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 50 }
 
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i  #正規表現でemailのフォーマットを策定し、定数に代入
   validates(:email, presence: true, length: { maximum: 255},
             format: { with: VALID_EMAIL_REGEX },
             uniqueness: {case_sensitive: false})
@@ -16,10 +16,13 @@ class User < ApplicationRecord
 
   has_secure_password
   # Userモデルにpassword_digest属性を追加し、Gemfileにbcryptを追加したことで、Userモデル内でhas_secure_passwordが使えるようになる
+  #password_digestにsaveする際、passwordがハッシュ化され保存する。また、passwordと_confirmation属性に存在性と値が一致するかどうかの検証が追加される(user.authenticate("password"))
 
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 },allow_nil: true
   # 略前→validates( :password, :presence => true, :length => {:minimum => 6})
   # Module ActiveModel::SecurePassword に72bytesを超える長さは無視すると記載があったため、72bytesに制限
+  #allow_nilオプションは対象の値がnilの場合にvalidationをスキップ
+  # has_secure_passwordではDBにレコード(オブジェクト)が生成された時だけ存在性(nilかどうか)のvalidationを行う性質があるので、実際にpasswordを作成する際は、nilかどうかの検証を行ってくれる
 
   class << self
   #テストのfixture用に、password_digestの文字列をハッシュ化して、ハッシュ値として返す
