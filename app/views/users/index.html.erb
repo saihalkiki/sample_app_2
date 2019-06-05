@@ -5,12 +5,10 @@
 <%= will_paginate %>
 
 <ul class="users">
-  <% @users.each do |user| %>
-    <li>
-      <%= gravatar_for user, size: 50 %>
-      <%= link_to user.name, user %>
-    </li>
-  <% end %>
+  <%# <% @users.each do |user| %>
+    <%= render @users %>
+  <%# <% end %>
+  <!-- @usersをrenderで読み出すと、Railsは自動的に@usersをUserオブジェクトのリストであると推測。さらに、ユーザーのコレクションを列挙し、それぞれのユーザーを_user.html.erbパーシャルで出力する。 -->
 </ul>
 
 <%= will_paginate %>
