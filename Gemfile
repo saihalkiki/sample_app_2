@@ -13,9 +13,11 @@ gem 'bcrypt',         '3.1.12'
 
 gem 'faker',          '1.7.3'
 
+# ページネーション (pagination) というもので、この場合は、例えば1つのページに一度に30人だけユーザーを表示する設定をする。
 gem 'will_paginate',           '3.1.6'
-
 gem 'bootstrap-will_paginate', '1.0.0'
+# 最もシンプルかつ堅牢なwill_paginateメソッドを使うため、
+# Gemfileにwill_paginate gem とbootstrap-will_paginate gemを両方含め、Bootstrapのページネーションスタイルを使ってwill_paginateを構成
 
 gem 'bootstrap-sass', '3.3.7'
 # Use mysql as the database for Active Record

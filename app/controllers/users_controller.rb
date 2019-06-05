@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :correct_user,   only: [:edit, :update]  # onlyオプション(ハッシュ)で指定したeditとupdateアクションだけに「correct_user」メソッドを適用
 
   def index # 全てのユーザーを表示するページ
-    @users = User.all
+    @users = User.paginate(page: params[:page])
   end
 
   def show
