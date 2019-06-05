@@ -2,4 +2,11 @@
 <li>
   <%= gravatar_for user, size: 50 %>
   <%= link_to user.name, user %>
+
+<%# ユーザーindexページの各ユーザーに削除用のリンクを追加し、続いて管理ユーザーへのアクセスを制限する。これにより、現在のユーザーが管理者のときに限り [delete] リンクが表示されるようになる %>
+  <% if current_user.admin? && !current_user?(user) %>
+  | <%= link_to "delete", user, method: :delete,
+                                data: { confirm: "You sure?" } %>
+  <% end %>
+
 </li>

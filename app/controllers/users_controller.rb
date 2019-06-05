@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   # onlyオプション(ハッシュ)で指定したeditとupdateアクションだけに「logged_in_user」メソッドを適用
   before_action :correct_user,   only: [:edit, :update]  # onlyオプション(ハッシュ)で指定したeditとupdateアクションだけに「correct_user」メソッドを適用
+  before_action :admin_user,     only: :destroy
+  # eforeフィルターを使ってdestroyアクションへのアクセスを制御
 
   def index # 全てのユーザーを表示するページ
     @users = User.paginate(page: params[:page])
@@ -44,6 +46,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User deleted"
+    redirect_to users_url
+  end
+
   private
 
   # Strong Parameters
@@ -65,6 +73,11 @@ class UsersController < ApplicationController
     def correct_user  # 正しいユーザーかどうか確認(他のユーザーがいじれないようにするもの)
       @user = User.find(params[:id])  # URLのidの値と同じユーザーを@userに代入
       redirect_to(root_url) unless current_user?(@user)  # @userとcurrent_userを比較して、違えばroot_urlへリダイレクト
+    end
+
+    # 管理者かどうか確認
+    def admin_user  # beforeフィルター用のadmin_userフィルター
+      redirect_to(root_url) unless current_user.admin?
     end
 
   end
