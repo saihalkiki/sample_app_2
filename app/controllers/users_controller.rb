@@ -6,11 +6,13 @@ class UsersController < ApplicationController
   # eforeフィルターを使ってdestroyアクションへのアクセスを制御
 
   def index # 全てのユーザーを表示するページ
-    @users = User.paginate(page: params[:page])
+    @users = User.where(activated: true).paginate(page: params[:page])
+    # @users = User.paginate(page: params[:page])
   end
 
   def show
     @user = User.find(params[:id])
+    redirect_to root_url and return unless @user.activated? # activatedがfalseならルートURLヘリダイレクト
     # debugger
   end
 
@@ -23,9 +25,16 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     # newビューにて送ったformをuser_paramsで受け取り、ユーザーオブジェクトを生成、@userに代入。悪意あるユーザー対策Strong Parametersを引数に必要な情報のみに絞る。
     if @user.save  # 保存の成功をここで扱う。
-      log_in(@user) # sessions_helperのlog_inメソッドを実行。session[:user_id] = @user.id
-       flash[:success] = "Welcome to the Sample App!" # flashの:successシンボルに成功時のメッセージを代入
-      redirect_to @user  # redirect_to user_url(@user)の略。redirect_to("/users/#{@user.id}")と等価。/users/idへ飛ばす(https://qiita.com/Kawanji01/items/96fff507ed2f75403ecb)を参考
+      # log_in(@user) # sessions_helperのlog_inメソッドを実行。session[:user_id] = @user.id
+      @user.send_activation_email  # アカウント有効化メールの送信
+      # ユーザーは以前のようにログイン(log_in(@user))しないようにした。
+
+       # flash[:success] = "Welcome to the Sample App!" # flashの:successシンボルに成功時のメッセージを代入
+      flash[:info] = "メールを確認してアカウントを有効化してください。"
+
+      # redirect_to @user  # redirect_to user_url(@user)の略。redirect_to("/users/#{@user.id}")と等価。/users/idへ飛ばす(https://qiita.com/Kawanji01/items/96fff507ed2f75403ecb)を参考
+      redirect_to root_url
+
     else
       render 'users/new'  #views/users/newへアクセスする
     end

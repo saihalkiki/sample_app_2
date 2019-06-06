@@ -1,18 +1,16 @@
 Rails.application.routes.draw do
 
-  root 'static_pages#home'
-  get  '/help',    to: 'static_pages#help'
-  # 名前付きルートが使用可能に
-  # '/help' → help_path
-  # 'http:www.expmple.com/help' → help_url
-  get  '/about',   to: 'static_pages#about'
-  get  '/contact', to: 'static_pages#contact'
-  get  '/signup',  to: 'users#new'
-  post '/signup',  to: 'users#create' #createアクションの時`signup`を取得
-  get '/login', to: 'sessions#new'
-  post '/login', to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy'
-  resources :users  #usersリソースをRESTfullな構造にするためのコード。
+  root   'static_pages#home'
+  get    '/help',    to: 'static_pages#help'
+  get    '/about',   to: 'static_pages#about'
+  get    '/contact', to: 'static_pages#contact'
+  get    '/signup',  to: 'users#new'
+  post   '/signup',  to: 'users#create'
+  get    '/login',   to: 'sessions#new'
+  post   '/login',   to: 'sessions#create'
+  delete '/logout',  to: 'sessions#destroy'
+  resources :users
+  resources :account_activations, only: [:edit]
 
   # HTTPﾘｸｴｽﾄ  URL        ｱｸｼｮﾝ   名前付きﾙｰﾄ
   # GET	    /users	      index	  users_path          users_url
@@ -35,6 +33,9 @@ Rails.application.routes.draw do
 
   # DELETE	/users/1	    destroy	user_path(user)     user_url(user)
   # ユーザーを削除するアクション
+
+  # GET	 /account_activation/<token>/edit	 edit  edit_account_activation_url(token)
+
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

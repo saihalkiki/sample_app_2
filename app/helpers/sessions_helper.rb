@@ -19,7 +19,7 @@ module SessionsHelper
     elsif (user_id = cookies.signed[:user_id]) # user_idに署名付きcookieを代入した結果、user_idに著名付きcookiesが存在すればtrue
       # raise  # テストがパスすれば、この部分がテストされていないことがわかる
       user = User.find_by(id: user_id) # user_id(著名な付きcookie)と同じユーザーidをもつユーザーをDBから探し、userに代入
-      if user && user.authenticated?(cookies[:remember_token]) # DBのユーザーがいるかつ、引数として受け取った値をrememberに代入して暗号化（remember_digest）し、DBにいるユーザーのremember_digestと比較、同一ならtrue・違えばfelseを返す
+      if user && user.authenticated?(:remember, cookies[:remember_token]) # DBのユーザーがいるかつ、引数として受け取った値をrememberに代入して暗号化（remember_digest）し、DBにいるユーザーのremember_digestと比較、同一ならtrue・違えばfelseを返す
         log_in(user) # session[:user_id]にuserのIDを代入
         @current_user = user  # @current_userにuser(User.find_by(id: user_id))を代入
       end

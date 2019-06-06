@@ -1,8 +1,10 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token #remember_token属性を作成
-  before_save { self.email = email.downcase }
+  attr_accessor :remember_token, :activation_token #remember_token属性を作成
+  before_save   :downcase_email  # オブジェクトが保存される直前、メールアドレスをすべて小文字にする
+  before_create :create_activation_digest  # オブジェクトが作成される直前、有効化トークンとダイジェストを作成および代入する
   # before_save { email.downcase! }
   # いくつかのデータベースのアダプタが、常に大文字小文字を区別するインデックスを使っているとは限らない問題への対処
+  # before_createコールバックを使う目的は、トークンとそれに対応するダイジェストを割り当てるため
 
   validates :name, presence: true, length: { maximum: 50 }
 
@@ -27,8 +29,8 @@ class User < ApplicationRecord
   class << self
   #テストのfixture用に、password_digestの文字列をハッシュ化して、ハッシュ値として返す
     def digest(string)
-    # def self.digest(string) → def User.digest(string)
-    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+      # def self.digest(string) → def User.digest(string)
+      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
                                                   BCrypt::Engine.cost
       BCrypt::Password.create(string, cost: cost)
     end
@@ -46,15 +48,45 @@ class User < ApplicationRecord
   end
 
   # 引数として受け取った値をrememberに代入して暗号化（remember_digest）し、DBにいるユーザーのremember_digestと比較、同一ならtrue・違えばfelseを返す
-  def authenticated?(remember_token)
-    return false if remember_digest.nil?  # 記憶ダイジェストがnilの場合、falseを戻り値として返す
-    BCrypt::Password.new(remember_digest).is_password?(remember_token) # DBのremember_digestと、受け取った引数をremember_digestにした値を比較し、ture・felseで返す
+  # トークンがダイジェストと一致したらtrueを返す
+  def authenticated?(attribute, token)  #  def authenticated?(remember_token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil? # 記憶ダイジェストがnilの場合、falseを戻り値として返す
+    # return false if remember_digest.nil?
+
+    BCrypt::Password.new(digest).is_password?(token) # DBのremember_digestと、受け取った引数をremember_digestにした値を比較し、ture・felseで返す
     # module BCryptで「is_password?」メソッドを定義しており、「==」と同じ意味。参照：https://github.com/codahale/bcrypt-ruby/blob/master/lib/bcrypt/password.rb
+    # BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
+
 
   # ユーザーのログイン情報を破棄する
   def forget
     update_attribute(:remember_digest, nil)  # DBにあるremember_digestをnilにする
   end
 
+  # アカウントを有効にする
+  def activate
+    update_columns(activated: true, activated_at: Time.zone.now.to_s(:db))
+    # update_attribute(:activated,    true)
+    # update_attribute(:activated_at, Time.zone.now.to_s(:db))
+  end
+
+  # 有効化用のメールを送信する
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+  private
+
+    # メールアドレスをすべて小文字にする
+    def downcase_email
+      self.email = email.downcase
+    end
+
+    # 有効化トークンとダイジェストを作成および代入する
+    def create_activation_digest
+      self.activation_token  = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
 end
