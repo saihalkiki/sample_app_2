@@ -8,7 +8,7 @@ Welcome to the Sample App! Click on the link below to activate your account:
 
 <%= link_to "Activate", edit_account_activation_url(@user.activation_token,
                                                     email: @user.email) %>
-<%# http://www.example.com/account_activations/q5lt38hQDc_959PVoo6b7A/edit?email=foo%40example.com
+<!-- http://www.example.com/account_activations/q5lt38hQDc_959PVoo6b7A/edit?email=foo%40example.com
 上のURLの「q5lt38hQDc_959PVoo6b7A」という部分はnew_tokenメソッドで生成されたもの
 URLの末尾で疑問符「?」に続けてキーと値のペアを記述したクエリパラメータを使って、このURLにメールアドレスもうまく組み込んでいる
-メールアドレスの「@」記号がURLでは「%40」となっているのは、通常URLでは「扱えない！」ため、文字を扱えるようにするために変換している %>
+メールアドレスの「@」記号がURLでは「%40」となっているのは、通常URLでは「扱えない！」ため、文字を扱えるようにするために変換している -->

@@ -29,4 +29,14 @@ class UserMailerTest < ActionMailer::TestCase
             # app/views/user_mailer/account_activation.html.erb:9:in `_app_views_user_mailer_account_activation_html_erb__2257556764507285820_70294306634960'
             # app/mailers/user_mailer.rb:5:in `account_activation'
             # test/mailers/user_mailer_test.rb:17:in `block in <class:UserMailerTest>'
+  test "password_reset" do  # パスワード再設定用メイラーメソッドのテスト
+    user = users(:michael)
+    user.reset_token = User.new_token
+    mail = UserMailer.password_reset(user)
+    assert_equal "Password reset", mail.subject
+    assert_equal [user.email], mail.to
+    assert_equal ["noreply@example.com"], mail.from
+    assert_match user.reset_token,        mail.body.encoded
+    assert_match CGI.escape(user.email),  mail.body.encoded
+  end
 end

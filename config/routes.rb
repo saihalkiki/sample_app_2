@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   root   'static_pages#home'
   get    '/help',    to: 'static_pages#help'
   get    '/about',   to: 'static_pages#about'
@@ -11,6 +15,8 @@ Rails.application.routes.draw do
   delete '/logout',  to: 'sessions#destroy'
   resources :users
   resources :account_activations, only: [:edit]
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+
 
   # HTTPﾘｸｴｽﾄ  URL        ｱｸｼｮﾝ   名前付きﾙｰﾄ
   # GET	    /users	      index	  users_path          users_url
@@ -34,7 +40,19 @@ Rails.application.routes.draw do
   # DELETE	/users/1	    destroy	user_path(user)     user_url(user)
   # ユーザーを削除するアクション
 
-  # GET	 /account_activation/<token>/edit	 edit  edit_account_activation_url(token)
+
+# resources :account_activations, only: [:edit]
+
+  # HTTPﾘｸｴｽﾄ : GET	 URL : /account_activation/<token>/edit	 ｱｸｼｮﾝ : edit  名前付きﾙｰﾄ : edit_account_activation_url(token)
+
+
+# resources :password_resets,     only: [:new, :create, :edit, :update]
+
+# GET	  /password_resets/new	        new	    new_password_reset_path
+# POST	/password_resets	            create	password_resets_path
+# GET	  /password_resets/<token>/edit	edit	  edit_password_reset_url(token)
+# PATCH	/password_resets/<token>	    update	password_reset_url(token)
+
 
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
