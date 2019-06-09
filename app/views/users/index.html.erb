@@ -6,9 +6,11 @@
 
 <ul class="users">
   <%# <% @users.each do |user| %>
-    <%= render @users %>
+    <%#= render user %>
   <%# <% end %>
+    <%= render @users %>
   <!-- @usersをrenderで読み出すと、Railsは自動的に@usersをUserオブジェクトのリストであると推測。さらに、ユーザーのコレクションを列挙し、それぞれのユーザーを_user.html.erbパーシャルで出力する。 -->
 </ul>
 
 <%= will_paginate %>
+<%# 実は、上のコードは引数なしで動作していました。これはwill_paginateが、Usersコントローラのコンテキストにおいて、@usersインスタンス変数が存在していることを前提としているため %>

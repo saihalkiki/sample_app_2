@@ -7,11 +7,13 @@ class UsersController < ApplicationController
 
   def index # 全てのユーザーを表示するページ
     @users = User.where(activated: true).paginate(page: params[:page])
+    # @users = User.all
     # @users = User.paginate(page: params[:page])
   end
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
     redirect_to root_url and return unless @user.activated? # activatedがfalseならルートURLヘリダイレクト
     # debugger
   end
@@ -71,13 +73,7 @@ class UsersController < ApplicationController
 
     # /beforeアクション/
 
-    def logged_in_user
-      unless logged_in?  # sessions_helperのメソッド  unlessはifの否定演算子 current_user(ログインユーザー)がnilであれば(false)処理を行う
-      store_location
-      flash[:danger] = "ログインしてください"
-      redirect_to login_url  #'/login'つまりnewビューへリダイレクト
-      end
-    end
+    # def logged_in_user  →  
 
     def correct_user  # 正しいユーザーかどうか確認(他のユーザーがいじれないようにするもの)
       @user = User.find(params[:id])  # URLのidの値と同じユーザーを@userに代入

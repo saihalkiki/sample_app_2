@@ -1,0 +1,9 @@
+<%# サンプルアプリケーションにフィード機能を導入するため、Homeページにはフィード用のパーシャルを追加 %>
+<!-- StaticPagesController => def home => @feed_itemsより -->
+<% if @feed_items.any? %>
+  <ol class="microposts">
+    <%= render @feed_items %>
+    <%# users/index.html.erbを参照 %>
+  </ol>
+  <%= will_paginate @feed_items %>
+<% end %>

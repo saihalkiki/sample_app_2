@@ -13,11 +13,18 @@ gem 'bcrypt',         '3.1.12'
 
 gem 'faker',          '1.7.3'
 
-# ページネーション (pagination) というもので、この場合は、例えば1つのページに一度に30人だけユーザーを表示する設定をする。
+gem 'carrierwave',             '1.2.2'
+# 投稿した画像を扱ったり、その画像をMicropostモデルと関連付けするために、CarrierWaveという画像アップローダーを使用
+# CarrierWaveを導入すると、Railsのジェネレーターで画像アップローダーが生成できるようになる
+# $ rails generate uploader Picture で生成
+
+gem 'mini_magick',             '4.7.0'
+# 画像をリサイズしたり、本番環境で画像をアップロードするために使用。
+
 gem 'will_paginate',           '3.1.6'
+# ページネーション (pagination) というもので、この場合は、例えば1つのページに一度に30人だけユーザーを表示する設定をする。
 gem 'bootstrap-will_paginate', '1.0.0'
-# 最もシンプルかつ堅牢なwill_paginateメソッドを使うため、
-# Gemfileにwill_paginate gem とbootstrap-will_paginate gemを両方含め、Bootstrapのページネーションスタイルを使ってwill_paginateを構成
+# 最もシンプルかつ堅牢なwill_paginateメソッドを使うため、Gemfileにwill_paginate gem とbootstrap-will_paginate gemを両方含め、Bootstrapのページネーションスタイルを使ってwill_paginateを構成
 
 gem 'bootstrap-sass', '3.3.7'
 # Use mysql as the database for Active Record
@@ -68,5 +75,11 @@ group :test do
   gem 'guard',                    '2.13.0'
   gem 'guard-minitest',           '2.4.4'
 end
+
+# group :production do
+#   gem 'pg',  '0.20.0'
+#   gem 'fog', '1.42'
+# end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

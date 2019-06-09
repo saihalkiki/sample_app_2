@@ -1,0 +1,28 @@
+<%= form_for(@micropost) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="field">
+    <%= f.text_area :content, placeholder: "Compose new micropost..." %>
+  </div>
+  <%= f.submit "Post", class: "btn btn-primary" %>
+
+  <%# 図 13.18のようにHomeページにアップローダーを追加するためには、マイクロポストのフォームにfile_fieldタグを含める必要があります %>
+  <%# app/uploaders/picture_uploader.rbの画像拡張子制限とapp/models/micropost.rbの画像サイズ制限を定義した画像のバリデーションをビューに組み込むために、フォーマットのバリデーションを反映するためには、file_fieldタグにacceptパラメータを付与して使います。 %>
+  <span class="picture">
+    <%= f.file_field :picture, accept: 'image/jpeg,image/gif,image/png' %>
+  </span>
+
+<!-- 大きすぎるファイルサイズに対して警告を出すために、JavaScript (正確にはjQuery) を書き加える
+もしファイルサイズが大きすぎた場合、alertメソッドで警告を出すといった仕組み。
+長すぎるアップロード時間を防いだり、サーバーへの負荷を抑えたりすることに繋がる -->
+  <script type="text/javascript">
+    $('#micropost_picture').bind('change', function() {
+       // (ハッシュマーク#から分かるように) CSS idのmicropost_pictureを含んだ要素を見つけ出し、この要素を監視している
+       // このidを持った要素とは、app/views/shared/_micropost_form.html.erbのマイクロポストのフォーム( f.file_field :picture)を示す
+      var size_in_megabytes = this.files[0].size/1024/1024;
+      if (size_in_megabytes > 5) {
+        alert('Maximum file size is 5MB. Please choose a smaller file.');
+      }
+    });
+  </script>
+
+<% end %>

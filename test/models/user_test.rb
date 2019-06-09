@@ -68,4 +68,12 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.authenticated?(:remember, '')  # @userのユーザーの記憶ダイジェストと引数で受け取った値が同一ならfalse、異なるならtrueを返す
   end
 
+  test "associated microposts should be destroyed" do
+    @user.save
+    @user.microposts.create!(content: "Lorem ipsum")
+    assert_difference 'Micropost.count', -1 do
+      @user.destroy
+    end
+  end
+
 end
