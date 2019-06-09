@@ -1,5 +1,8 @@
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy
+  has_many :active_relationships, class_name:  "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent:   :destroy
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email  # オブジェクトが保存される直前、メールアドレスをすべて小文字にする
   before_create :create_activation_digest  # オブジェクトが作成される直前、有効化トークンとダイジェストを作成および代入する
