@@ -1,0 +1,18 @@
+<%# 統計情報のパーシャルを実装,
+このパーシャルはプロフィールページとHomeページの両方に表示される
+ %>
+<% @user ||= current_user %>  <%# 現在のユーザーを取得 %>
+<div class="stats">
+  <a href="<%= following_user_path(@user) %>">
+    <strong id="following" class="stat"> <%# Ajaxを実装するとき用にCSS idを指定 %>
+      <%= @user.following.count %> <%# フォローしているユーザーの人数を計算 %>
+    </strong>
+    following
+  </a>
+  <a href="<%= followers_user_path(@user) %>">
+    <strong id="followers" class="stat">  <%# Ajaxを実装するとき用にCSS idを指定 %>
+      <%= @user.followers.count %>  <%# フォロワーの人数を計算 %>
+    </strong>
+    followers
+  </a>
+</div>

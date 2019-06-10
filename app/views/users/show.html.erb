@@ -9,10 +9,18 @@
         <%= @user.name %>
       </h1>
     </section>
+<!-- プロフィールページにフォロワーの統計情報を追加 -->
+    <section class="stats">
+      <%= render 'shared/stats' %>
+    </section>
+<!-- - -->
   </aside>
 
   <!-- マイクロポストをユーザーのshowページ (プロフィール画面) に表示 -->
   <div class="col-md-8">
+<!-- フォロー/フォロー解除フォームを追加 -->
+    <%= render 'follow_form' if logged_in? %>
+<!-- - -->
     <% if @user.microposts.any? %>
       <h3>Microposts (<%= @user.microposts.count %>)</h3>
       <ol class="microposts">

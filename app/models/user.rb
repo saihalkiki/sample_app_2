@@ -1,8 +1,34 @@
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy
+
+# フォローしている人数のためのモデル作成
   has_many :active_relationships, class_name:  "Relationship",
                                   foreign_key: "follower_id",
                                   dependent:   :destroy
+  # ActiveRelationshipモデルを探してしまうので、相互にフォローユーザーを繋ぐRelationshipモデルを見つけることができない。今回のケースではRailsに探して欲しいモデルのクラス名を明示的に伝える必要がある。
+
+  # フォローしているユーザーを自動判別しないため、follower_idという外部キー(foreign_key:)を持って特定しなくてはならない
+
+  # ユーザーを削除したら、ユーザーのリレーションシップも同時に削除される必要があるため,destroyも追加
+
+# フォローされてる人数(フォロワー)のためのモデル作成
+  has_many :passive_relationships, class_name:  "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent:   :destroy
+   # 要は、active_relationshipsをpassive_relationshipsに入れ替えて、 followed_idとfollower_idを入れ替えるだけ。
+
+# 多対多の関連付け
+  has_many :following, through: :active_relationships, source: :followed
+  # has_many throughという関連付けでは、Railsはfollowedsというシンボルを見て、自動的にfollowed単数形に変え、relationshipsテーブルのfollowed_idを使って対象のユーザーを取得してくる。本来の記載は、=> has_many :followeds, through: :active_relationships
+
+  # followedsという使い方は英語としては不適切なため、followeds => followingという名前にする。そのために、:sourceパラメーターを使って、「following配列の元はfollowed idの集合である」ということを明示的にRailsに伝える。
+
+# 多対多の関連付け
+  has_many :followers,  through: :passive_relationships,  source: :follower
+  # 注意すべき箇所は:sourceキーを省略してもよかった点。
+  # has_many :followers, through: :passive_relationships
+  # Railsがfollowersを単数形にして自動的に外部キーfollower_idを探してくれるから。ただ、必要がないがhas_many :followingとの類似性を強調させるために書いている
+
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email  # オブジェクトが保存される直前、メールアドレスをすべて小文字にする
   before_create :create_activation_digest  # オブジェクトが作成される直前、有効化トークンとダイジェストを作成および代入する
@@ -101,9 +127,28 @@ class User < ApplicationRecord
 
   # 試作feedの定義
   # 完全な実装は次章の「ユーザーをフォローする」を参照
+  # ユーザーのステータスフィードを返す
   def feed
-    Micropost.where("user_id = ?", id)
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
     # 「?」があることで、SQLクエリに代入する前にidがエスケープされるため、SQLインジェクション (SQL Injection) と呼ばれる深刻なセキュリティホールを避けることができます
+  end
+
+  # ユーザーをフォローする
+  def follow(other_user)
+    following << other_user
+  end
+
+  # ユーザーをフォロー解除する
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy
+  end
+
+  # 現在のユーザーがフォローしてたらtrueを返す
+  def following?(other_user)
+    following.include?(other_user)
   end
 
   private
