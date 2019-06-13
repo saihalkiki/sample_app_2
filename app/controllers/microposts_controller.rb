@@ -25,7 +25,7 @@ class MicropostsController < ApplicationController
   private
 
   def micropost_params
-    params.require(:micropost).permit(:content)
+    params.require(:micropost).permit(:content, :picture)
       # :picture=>CarrierWave(画像アップローダー)をWebから更新できる許可リストにpicture属性を追加しましょう
     end
 

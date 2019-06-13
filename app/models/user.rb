@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+# micropostテーブルとの関連付け、および、DB上の取り残しを防ぐためにdependent: :destroyというオプションでテーブル同士消去動作も紐付ける。
   has_many :microposts, dependent: :destroy
 
 # フォローしている人数のためのモデル作成
