@@ -18,7 +18,7 @@ gem 'carrierwave',             '1.2.2'
 # CarrierWaveを導入すると、Railsのジェネレーターで画像アップローダーが生成できるようになる
 # $ rails generate uploader Picture で生成
 
-gem 'mini_magick',             '4.7.0'
+gem 'mini_magick',             '4.9.4'
 # 画像をリサイズしたり、本番環境で画像をアップロードするために使用。
 
 gem 'will_paginate',           '3.1.6'
