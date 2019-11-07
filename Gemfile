@@ -26,7 +26,7 @@ gem 'will_paginate',           '3.1.6'
 gem 'bootstrap-will_paginate', '1.0.0'
 # 最もシンプルかつ堅牢なwill_paginateメソッドを使うため、Gemfileにwill_paginate gem とbootstrap-will_paginate gemを両方含め、Bootstrapのページネーションスタイルを使ってwill_paginateを構成
 
-gem 'bootstrap-sass', '3.3.7'
+gem 'bootstrap-sass', '3.4.1'
 # Use mysql as the database for Active Record
 gem 'puma',         '3.9.1'
 # Use SCSS for stylesheets
